@@ -90,25 +90,27 @@ export default class LayoutDrawer {
             divPage.className = 'page';
             page.columns.forEach(({ elements }, columnIndex) => {
                 const divColumn = document.createElement('DIV');
+                const divColumnWrapper = document.createDocumentFragment();
                 divColumn.className = 'column';
                 elements.forEach((element, elementIndex) => {
                     element.className = `element ${element.className}`;
-                    divColumn.appendChild(element);
+                    divColumnWrapper.appendChild(element);
 
                     // template A
                     if(columnIndex === 0 && elementIndex === 0) {
-                        this.appendAnImage(divColumn);
+                        this.appendAnImage(divColumnWrapper);
                     }
                 });
 
                 if(columnIndex === 0 && _.isEmpty(elements)) {
-                    this.appendAnImage(divColumn);
+                    this.appendAnImage(divColumnWrapper);
                 }
 
                 if(columnIndex === 1) {
-                    this.appendAnImage(divColumn);
+                    this.appendAnImage(divColumnWrapper);
                 }
 
+                divColumn.appendChild(divColumnWrapper);
                 divPage.appendChild(divColumn);
             });
             document.body.appendChild(divPage);
