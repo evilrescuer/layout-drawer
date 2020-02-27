@@ -24,7 +24,6 @@ export default class LayoutDrawer {
         this.temp.innerHTML = '';
         this.temp.appendChild(this.currentElement);
         this.currentAdditionalHeight = marginTop + this.temp.offsetHeight;
-        console.log('----', this.currentAdditionalHeight);
     }
     parse (data) {
         const { title, paragraphs } = data;
@@ -33,7 +32,7 @@ export default class LayoutDrawer {
         const texts = typeToParagraph['text'].map(({ context }) => context);
         this.imgSrcs = typeToParagraph['img'].map(({ src }) => src);
 
-        texts.forEach((text, index) => {
+        texts.forEach(text => {
             this.currentElement = document.createElement('DIV');
             this.currentElement.innerHTML = text;
             this.traverse();
@@ -49,7 +48,7 @@ export default class LayoutDrawer {
         for (let i=0; i < page.columns.length; i ++) {
             const column = page.columns[i];
             if (!column.isFull) {
-                this.updateAdditionalHeight(column.isEmpty() ? 0 : 30);
+                this.updateAdditionalHeight(column.getMarginTop());
                 if (column.isEnoughToAdd(this.currentAdditionalHeight)) {
                     column.elements.push(this.currentElement);
                     column.usedHeight += this.currentAdditionalHeight;
@@ -57,6 +56,12 @@ export default class LayoutDrawer {
                 }
                 else {
                     column.isFull = true;
+                    const [firstElement, secondElement] = column.splitElement(this.currentElement, this.temp);
+                    if(firstElement) {
+                        column.usedHeight += this.temp.offsetHeight;
+                        column.elements.push(firstElement);
+                        this.currentElement = secondElement;
+                    }
 
                     if (i === page.columns.length - 1) {
                         page.isFull = true;
@@ -107,7 +112,6 @@ export default class LayoutDrawer {
                 divPage.appendChild(divColumn);
             });
             document.body.appendChild(divPage);
-            // this.generatePageBorder();
             this.generatePageFooter(pageIndex)
         });
     }
@@ -115,7 +119,7 @@ export default class LayoutDrawer {
         if (this.imgSrcs.length > 0) {
             const imgSrc = this.imgSrcs.shift();
             const img = document.createElement('IMG');
-            img.style.height = `${imgHeight}px`
+            img.style.height = `${imgHeight}px`;
             img.src = imgSrc;
             img.className = 'element';
             divColumn.appendChild(img);
@@ -127,11 +131,6 @@ export default class LayoutDrawer {
         pageFooter.innerHTML = `---  ${pageIndex + 1}  ---`;
         document.body.appendChild(pageFooter);
     }
-    // generatePageBorder () {
-    //     const pageBorder = document.createElement('div');
-    //     pageBorder.className = 'border';
-    //     document.body.appendChild(pageBorder);
-    // }
 }
 
 class Page {
@@ -151,9 +150,37 @@ class Column {
         this.usedHeight = imgHeight; //TODO
     }
     isEnoughToAdd(additionalHeight) {
-        return this.height >= this.usedHeight + additionalHeight
+        return this.height >= this.usedHeight + additionalHeight;
+    }
+    getCountOfLinesEnoughToAdd(additionalHeight) {
+        return Math.floor((this.usedHeight - additionalHeight) / 30);
     }
     isEmpty() {
         return _.isEmpty(this.elements);
     }
+    getMarginTop () {
+        return this.isEmpty() ? 0 : 30;
+    }
+    splitElement (element, tempElement) {
+        const availableHeight = this.height - this.usedHeight - this.getMarginTop();
+        // find suitable text
+        let tempLength = element.innerText.length;
+        while (tempLength > 0) {
+            tempElement.innerHTML = element.innerText.substr(0, tempLength);
+            if (tempElement.offsetHeight <= availableHeight) {
+                break;
+            }
+            tempLength --;
+        }
+        return [
+            generateTextWrapper(element.innerText.substr(0, tempLength)),
+            generateTextWrapper(element.innerText.substr(tempLength)),
+        ]
+    }
+}
+
+function generateTextWrapper (text) {
+    const wrapper = document.createElement('DIV');
+    wrapper.innerText = text;
+    return wrapper;
 }
