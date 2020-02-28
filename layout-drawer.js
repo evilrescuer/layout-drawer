@@ -81,8 +81,9 @@ export default class LayoutDrawer {
         const title = document.createElement('div');
         title.className = 'title';
         title.innerText = text;
+        this.temp.appendChild(title);
         firstPage.elements.push(title);
-        firstPage.usedHeight += title.offsetHeight + 30;
+        firstPage.usedHeight += this.temp.offsetHeight;
     }
     render () {
         this.pages.forEach((page, pageIndex) => {
@@ -113,14 +114,17 @@ export default class LayoutDrawer {
                 divColumn.appendChild(divColumnWrapper);
                 divPage.appendChild(divColumn);
             });
-            document.body.appendChild(divPage);
-            this.generatePageFooter(pageIndex)
+            // setTimeout(() => {
+                document.body.appendChild(divPage);
+                this.generatePageFooter(pageIndex)
+            // }, 10);
         });
     }
     appendAnImage (divColumn) {
         if (this.imgSrcs.length > 0) {
             const imgSrc = this.imgSrcs.shift();
             const img = document.createElement('IMG');
+            img.style.maxWidth = `${columnWidth}px`;
             img.style.height = `${imgHeight}px`;
             img.src = imgSrc;
             img.className = 'element';

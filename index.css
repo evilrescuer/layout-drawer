@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    overflow-x: hidden;
 }
 .title {
     font-size: 18px !important;
@@ -15,18 +16,10 @@ html, body {
     height: 100%;
     box-sizing: border-box;
     position: relative;
-    /*border: 1px black dashed;*/
 }
-/*.page::after {*/
-/*    position: absolute;*/
-/*    content: ' ';*/
-/*    width: 100vw;*/
-/*    height: 100vh;*/
-/*    border: 1px red dashed;*/
-/*}*/
 .column {
     flex: 1;
-    /*border: 1px red solid;*/
+    overflow: hidden;
     box-sizing: border-box;
 }
 .column:first-child {
@@ -58,6 +51,3 @@ html, body {
     position: relative;
     top: -20px;
 }
-/*.border {*/
-/*    position: absolute;*/
-/*}*/

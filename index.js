@@ -14,7 +14,7 @@ for (let i=0; i<118; i++) {
 for (let i=0; i<20; i++) {
     data1.paragraphs.push({
         "type": "img",
-        "src": `http://cdn.qiancipai.com/190305170514448634.jpg`
+        "src": `http://a4.att.hudong.com/21/09/01200000026352136359091694357.jpg`
     });
 }
 
@@ -26,7 +26,7 @@ console.log('解析数据耗时：', `${time2 - time1}ms`);
 
 layoutDrawer.render();
 const time3 = new Date();
-console.log('渲染耗时：', `${time3 - time2}ms`);
+console.log('渲染函数耗时：', `${time3 - time2}ms`);
 
 console.log('总耗时：', `${time3 - time1}ms`);
 
