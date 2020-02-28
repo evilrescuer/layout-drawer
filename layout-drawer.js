@@ -8,7 +8,6 @@ export default class LayoutDrawer {
     constructor() {
         this.pages = [new Page()];
         this.indexOfPage = 0;
-        this.indexOfColumn = 0;
         this.currentAdditionalHeight = 0;
         this.currentElement = null;
         this.imgSrcs = [];
@@ -153,7 +152,7 @@ class Column {
         this.isFull = false;
         this.elements = [];
 
-        this.usedHeight = imgHeight; //TODO
+        this.usedHeight = imgHeight + 30;
     }
     isEnoughToAdd(additionalHeight) {
         return this.height >= this.usedHeight + additionalHeight;
