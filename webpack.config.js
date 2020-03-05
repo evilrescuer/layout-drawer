@@ -17,9 +17,5 @@ module.exports = {
         ])
     ],
     mode: 'development',
-    devtool: 'eval-source-map',
-    devServer: {
-        port: 8888,
-        host: '192.168.199.203',
-    }
+    devtool: 'eval-source-map'
 };
